@@ -1,0 +1,213 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper]{article}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+%\usepackage{boxedminipage2e}
+\usepackage{calc} %用于表格列宽计算
+\usepackage{ctex} %中文支持
+%\usepackage{dashbox}
+\usepackage{enumitem} %列表环境
+%\usepackage{epsfig}
+\usepackage{environ} %定义新环境，用于定义试题正文环境exam
+\usepackage{fancyhdr} %页眉页脚设置
+%\usepackage{float}
+\usepackage[norule,perpage,symbol,hang,marginal]{footmisc} %脚注设置
+\usepackage{geometry} %页面设置
+\usepackage{mathrsfs} %数学字体支持，如\mathscr 
+\usepackage{makecell} %表格相关
+\usepackage{interfaces-makecell} %表格相关
+\usepackage{multirow,multicol} %表格相关
+%\usepackage{ragged2e}
+\usepackage{lastpage}
+\usepackage{lipsum} %随机文本，测试正文用，不需要可去除
+\usepackage{tabu}
+\usepackage{tcolorbox} %带框页面宏包，可自动分页，用于定义试题正文框架
+\tcbuselibrary{many}
+\usepackage{tikz}
+\usepackage{ulem} %各种下划线，用于“课程信息”中空白下划线（\uline与\underline 效果不同）
+
+
+%\usepackage{xcolor}
+%\usepackage{verbatim}
+%\usepackage[all]{xy}
+
+
+%-----------页面设置----------------%
+\geometry{textwidth=15.91cm,top=2.54cm,bottom=2.54cm,footnotesep=2pt,footskip=1.2cm}
+%	\linespread{1.4} %行距
+
+%-----------页眉页脚设置----------------%
+%	\fancyhfoffset[r]{-1cm} %页眉页脚右边比正文宽度减小1.5cm
+\pagestyle{fancy} 
+\fancyhf{} %页眉空
+\lfoot{}
+\cfoot{}
+\rfoot{\zihao{-5}第~\thepage~页\ 共~\pageref{LastPage}~页} %需 lastpage 宏包
+\renewcommand{\headrulewidth}{0pt} %页眉无横线
+
+%-----------脚注设置----------------%
+\renewcommand{\thefootnote}{}%脚注无编号
+\renewcommand{\hangfootparskip}{0\baselineskip}
+\renewcommand{\hangfootparindent}{2\ccwd}
+
+%-----------列表环境设置----------------%
+\setlist{nosep}
+%	\AddEnumerateCounter{\chinese}{\chinese}{}
+
+
+%------------------定义命令：虚线框环境/诚信保证--------------------% 仅用到tikz包
+\newcommand{\CreGuar}{
+	\begin{center}
+		\begin{tikzpicture}
+		\node[rectangle,text width=\textwidth,align=flush center] (m)
+		{\par
+			\begin{minipage}{15,5cm}
+			\centering\zihao{-2}诚信保证\\
+			\zihao{4}\qquad 本人知晓我校考场规则和违纪处分条例的有关规定，保证遵守考场规则，诚实做人。\hfill 本人签字：\underline{\hspace{2cm}}
+			\end{minipage}
+		};
+		\draw[dashed] (m.south west) rectangle (m.north east);
+		\end{tikzpicture}%定义一个名字为m的node，宽度=正文宽度，从m的西南到东北画虚线成为一个矩形框，node 文字内容用minipage环境生成
+	\end{center}
+}
+
+%---------------定义命令：编号/标题/年份/学期---------------------%		
+\newcommand{\titleinfo}[2]{
+	\noindent\quad 编号：\underline{\hspace{2cm}}	%编号
+	
+	\begin{center}
+		\zihao{-2}西北工业大学考试试题（卷）\footnote{\zihao{5} 注：1. 答题请写在该试卷上相应位置。
+			
+			2.命题教师和审题教师姓名应在试卷存档时填写。\hfill 教务处印制}%标题，注意事项作为脚注形式
+		\\
+		\zihao{4}20#1 -- 20\the\numexpr#1+1 学年第#2学期 %学年／学期
+	\end{center}	
+}		
+
+%---------------定义课程信息命令--------------------%用ulem包中的\uline而不是\underline作下划线		
+\newcommand{\courseinfo}[7]{
+	\begin{center}
+		\tabcolsep=1pt %表格每列额外间距
+		\begin{tabular}{p{61.5mm}p{49.5mm}p{42.7mm}}
+			开课学院 \uline{\hfill #1\hfill}\  & 课程 \uline{\hfill #2\hfill}\  & 学时 \uline{~ #3 ~\ }\\		
+			考试日期 \uline{\hfill #4\hfill}\ & 考试时间 \uline{~ #5 ~}\ 小时 & 考试形式（#6）（#7）卷\\
+		\end{tabular}
+	\end{center}
+}
+
+%------------------定义记分表格命令--------------------%
+\newcommand{\datishu}[1]{
+	\begin{center}
+		\renewcommand\arraystretch{1.1}
+		\begin{tabular}{|*{\the\numexpr#1+2\relax}{p{1cm}<{\centering}|}}
+			\hline
+			题号 & \repeatcell{#1}{%
+				text=\zhnumber{\the\numexpr(\row-1)*4+\column\relax},
+				end=\\ \hline} & 总分\\
+			\hline
+			得分 & \repeatcell{\the\numexpr#1+1\relax}{%
+				text=,
+				end=\\ \hline}\\
+			\hline
+		\end{tabular}
+	\end{center}
+}
+
+%------------------定义试题正文环境--------------------% 用到tcolorbox
+\NewEnviron{exam}
+{
+	\begin{tcolorbox}[spartan,breakable,
+		lower separated=false,%考生信息以表格形式作为upper part，考题作为lower part，中间不划线
+		top=-3pt,leftupper=-3pt,rightupper=-3pt,%使upper part表格边框与box对齐
+		middle=0.5mm,%调整upper/lower距离
+		colback=white,colframe=black,
+		pad at break=2mm, %break 处上下边距
+		leftlower=2mm,rightlower=2mm, %lower part左右间距
+		boxrule=0.4pt,%box 边框线宽
+		toprule at break=0.4pt,bottomrule at break=0.4pt, %break box 上下线宽
+		height fill, %如果只有一页，使第一页带框高度与正文高度一致
+		height fixed for=middle and last %使最后一页带框高度与正文高度一致（内容不满用垂直空白补）
+		]
+		% 以下班级学号姓名
+		\begin{tabular} 	{m{23.3mm}<{\centering}|m{23.3mm}|m{19.2mm}<{\centering}|m{23.3mm}|p{20.5mm}<{\centering}|m{23.3mm}}
+			考生班级 &  \rule{0pt}{8.5mm}  & 学\quad 号 &  & 姓\quad 名 & \\
+			\hline
+		\end{tabular}
+		\tcblower
+		\BODY
+	\end{tcolorbox}
+}
+
+
+	
+		
+%----------------------自定义数学符号，与模板无关，不需要可自行更改或去除----------------------%
+\def\R{\mathbb{R}}
+\def\S{\mathbb{S}}
+\def\H{\mathbb{H}}
+\def\Z{\mathbb{Z}}
+\def\C{\mathbb{C}}
+\def\N{\mathbb{N}}
+\def\Q{\mathbb{Q}}
+\def\et{\tilde{e}}
+\def\th{\tilde{h}}
+\def\ep{\varepsilon}
+\def\bn{\bar{\nabla}}
+\def\Sr{\mathbb{S}^{m}(1)\times\mathbb{R}}
+\def\vH{\mathbf{H}}
+\def\p{\partial}
+\def\dt{\partial_t}
+\def\dx{\partial_x}
+\def\dy{\partial_y}
+\def\E{\mathbb{E}}
+\def\tr{\mathrm{tr\,}}
+\def\F{\mathcal{F}}
+\def\la{\langle}
+\def\ra{\rangle}
+\def\lam{\lambda}
+\def\Ric{\mathrm{Ric}}
+\def\D{\displaystyle}
+\def\t{\textstyle}
+		
+\begin{document}
+	\zihao{-4} %试题字号小四
+{\bfseries %试卷前面信息用宋体加粗
+	
+%-----------------------------诚信保证-------------------------------%	
+\CreGuar
+
+%---------------------------------------编号/标题/年度------------------------------%	
+\titleinfo{20} %学年：填第一个年份后两位，如2014-2015学年，填“14”
+		{二} %学期：填“一”或“二”
+
+%-----------------------------课程信息-------------------------%
+ 	 \courseinfo{数学与统计学院}			%开课学院
+				{微分几何}		%课程名称
+				{48}				%学时：数字
+				{2020.6.17}		%考试日期：yy.mm.dd
+				{2}				%考试时间(小时)，数字
+				{闭}					%形式：开/闭
+				{A}					%形式：A/B
+
+%-----------------------------题号得分表------------------------------%	
+ %输入大题数目，建议不超过10，否则需要调整表格间距
+\datishu{6}
+}
+
+
+%-----------------------------试题正文-------------------------------%
+\begin{exam}
+{\kaishu 此处输入考题 }
+
+\begin{enumerate}[wide,itemsep=0pt,label=\chinese*.]
+	\item 填空
+		\begin{enumerate}[label=\arabic*.,align=left,leftmargin=0pt,labelindent=\ccwd,listparindent=\parindent,labelwidth=\ccwd,labelsep=0pt,itemindent=!,itemsep=0pt]%wide=align=left, leftmargin=0pt, labelindent=\parindent,listparindent=\parindent, labelwidth=0pt, itemindent=!
+			\item ...
+			\item ...
+		\end{enumerate}	
+	\item 解答
+\end{enumerate}
+
+\lipsum[1-2]
+
+\end{exam}
+\end{document}
