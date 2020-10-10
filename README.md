@@ -1,5 +1,5 @@
 # NWPU-Exam-Template
-[](https://img.shields.io/badge/TeX-template-brightgreen.svg) [](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg)[](https://img.shields.io/badge/status-complete-green.svg) 
+![](https://img.shields.io/badge/TeX-template-yellow.svg) ![](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg)![](https://img.shields.io/badge/status-complete-brightgreen.svg) 
 
 ### 模版说明
 
