@@ -1,5 +1,5 @@
 % !TEX encoding = UTF-8 Unicode
-\documentclass[a4paper]{article}
+\documentclass{article}
 \usepackage{amsfonts,amsmath,amssymb,amsthm}
 %\usepackage{boxedminipage2e}
 \usepackage{calc} %用于表格列宽计算
@@ -12,6 +12,7 @@
 %\usepackage{float}
 \usepackage[norule,perpage,symbol,hang,marginal]{footmisc} %脚注设置
 \usepackage{geometry} %页面设置
+\usepackage{ifthen} %
 \usepackage{mathrsfs} %数学字体支持，如\mathscr 
 \usepackage{makecell} %表格相关
 \usepackage{interfaces-makecell} %表格相关
@@ -25,29 +26,32 @@
 \usepackage{tikz}
 \usepackage{ulem} %各种下划线，用于“课程信息”中空白下划线（\uline与\underline 效果不同）
 
+%-------Times Roman 字体--------%
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
 
 %\usepackage{xcolor}
 %\usepackage{verbatim}
 %\usepackage[all]{xy}
 
-
 %-----------页面设置----------------%
-\geometry{textwidth=15.91cm,top=2.54cm,bottom=2.54cm,footnotesep=2pt,footskip=1.2cm}
+\geometry{papersize={197mm,273mm},top=2.54cm,bottom=2.2cm,textwidth=15.91cm,includefoot,headsep=2pt,footskip=0pt,footnotesep=3pt}
 %	\linespread{1.4} %行距
 
 %-----------页眉页脚设置----------------%
 %	\fancyhfoffset[r]{-1cm} %页眉页脚右边比正文宽度减小1.5cm
 \pagestyle{fancy} 
 \fancyhf{} %页眉空
-\lfoot{}
+\chead{\ifthenelse{\value{page}=1}{}{\zihao{5} 西北工业大学命题专用纸}} %第一页页眉空
+\lfoot{\ifthenelse{\value{page}=1}{}{\zihao{5}教务处印制}} %第一页左侧页脚空
 \cfoot{}
-\rfoot{\zihao{-5}第~\thepage~页\ 共~\pageref{LastPage}~页} %需 lastpage 宏包
+\rfoot{{\zihao{5}共~\pageref{LastPage}~页\quad 第~\thepage~页\quad}} %需 lastpage 宏包
 \renewcommand{\headrulewidth}{0pt} %页眉无横线
 
 %-----------脚注设置----------------%
 \renewcommand{\thefootnote}{}%脚注无编号
-\renewcommand{\hangfootparskip}{0\baselineskip}
-\renewcommand{\hangfootparindent}{2\ccwd}
+\renewcommand{\hangfootparskip}{0pt}
+%\renewcommand{\hangfootparindent}{2\ccwd}
 
 %-----------列表环境设置----------------%
 \setlist{nosep}
@@ -57,37 +61,38 @@
 %------------------定义命令：虚线框环境/诚信保证--------------------% 仅用到tikz包
 \newcommand{\CreGuar}{
 	\begin{center}
-		\begin{tikzpicture}
-		\node[rectangle,text width=\textwidth,align=flush center] (m)
+%		\vspace*{-43pt}
+		\begin{tikzpicture}[baseline=0pt]
+		\node[inner xsep=0pt,above=3pt,rectangle,text width=0.998\textwidth,align=flush center] (m)
 		{\par
-			\begin{minipage}{15,5cm}
-			\centering\zihao{-2}诚信保证\\
-			\zihao{4}\qquad 本人知晓我校考场规则和违纪处分条例的有关规定，保证遵守考场规则，诚实做人。\hfill 本人签字：\underline{\hspace{2cm}}
+			\begin{minipage}{15.2cm}
+			\centering\heiti 诚信保证\\
+			\qquad 本人知晓我校考场规则和违纪处分条例的有关规定，保证遵守考场规则，诚实做人。\hfill 本人签字：\underline{\hspace{3cm}}
 			\end{minipage}
 		};
-		\draw[dashed] (m.south west) rectangle (m.north east);
+		\draw[dash pattern=on 2pt off 1pt] (m.south west) rectangle (m.north east);
 		\end{tikzpicture}%定义一个名字为m的node，宽度=正文宽度，从m的西南到东北画虚线成为一个矩形框，node 文字内容用minipage环境生成
 	\end{center}
 }
 
 %---------------定义命令：编号/标题/年份/学期---------------------%		
 \newcommand{\titleinfo}[2]{
-	\noindent\quad 编号：\underline{\hspace{2cm}}	%编号
-	
+	\noindent 编号：\underline{\hspace{2cm}}	%编号
+%	\vspace*{-5pt}
 	\begin{center}
-		\zihao{-2}西北工业大学考试试题（卷）\footnote{\zihao{5} 注：1. 答题请写在该试卷上相应位置。
-			
-			2.命题教师和审题教师姓名应在试卷存档时填写。\hfill 教务处印制}%标题，注意事项作为脚注形式
+		\zihao{-2}西北工业大学考试试题（卷）
+		\footnote{\zihao{5} 注：命题纸上一般不留答题位置，试题请用小四、宋体打印且不出框。
+		}%标题，注意事项作为脚注形式
 		\\
-		\zihao{4}20#1 -- 20\the\numexpr#1+1 学年第#2学期 %学年／学期
+		\zihao{4}20#1 -- 20\the\numexpr#1+1 学年\quad #2季学期 %学年／学期
 	\end{center}	
 }		
 
 %---------------定义课程信息命令--------------------%用ulem包中的\uline而不是\underline作下划线		
 \newcommand{\courseinfo}[7]{
 	\begin{center}
-		\tabcolsep=1pt %表格每列额外间距
-		\begin{tabular}{p{61.5mm}p{49.5mm}p{42.7mm}}
+		\tabcolsep=0pt %表格每列额外间距
+		\begin{tabular}{p{63.3mm}p{51.3mm}p{44.5mm}}
 			开课学院 \uline{\hfill #1\hfill}\  & 课程 \uline{\hfill #2\hfill}\  & 学时 \uline{~ #3 ~\ }\\		
 			考试日期 \uline{\hfill #4\hfill}\ & 考试时间 \uline{~ #5 ~}\ 小时 & 考试形式（#6）（#7）卷\\
 		\end{tabular}
@@ -122,8 +127,8 @@
 		colback=white,colframe=black,
 		pad at break=2mm, %break 处上下边距
 		leftlower=2mm,rightlower=2mm, %lower part左右间距
-		boxrule=0.4pt,%box 边框线宽
-		toprule at break=0.4pt,bottomrule at break=0.4pt, %break box 上下线宽
+		boxrule=1pt,%box 边框线宽
+		toprule at break=1pt,bottomrule at break=1pt, %break box 上下线宽
 		height fill, %如果只有一页，使第一页带框高度与正文高度一致
 		height fixed for=middle and last %使最后一页带框高度与正文高度一致（内容不满用垂直空白补）
 		]
@@ -172,12 +177,13 @@
 	\zihao{-4} %试题字号小四
 {\bfseries %试卷前面信息用宋体加粗
 	
-%-----------------------------诚信保证-------------------------------%	
+%-----------------------------诚信保证-------------------------------%
+%\vspace*{-53pt}	
 \CreGuar
-
+\vspace*{-10pt}
 %---------------------------------------编号/标题/年度------------------------------%	
 \titleinfo{20} %学年：填第一个年份后两位，如2014-2015学年，填“14”
-		{二} %学期：填“一”或“二”
+		{秋} %学期：填“秋”或“春”
 
 %-----------------------------课程信息-------------------------%
  	 \courseinfo{数学与统计学院}			%开课学院
@@ -190,7 +196,7 @@
 
 %-----------------------------题号得分表------------------------------%	
  %输入大题数目，建议不超过10，否则需要调整表格间距
-\datishu{6}
+\datishu{7}
 }
 
 
@@ -206,7 +212,6 @@
 		\end{enumerate}	
 	\item 解答
 \end{enumerate}
-
 \lipsum[1-2]
 
 \end{exam}
