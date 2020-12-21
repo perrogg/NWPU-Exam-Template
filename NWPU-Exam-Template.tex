@@ -45,7 +45,7 @@
 \chead{\ifthenelse{\value{page}=1}{}{\zihao{5} 西北工业大学命题专用纸}} %第一页页眉空
 \lfoot{\ifthenelse{\value{page}=1}{}{\zihao{5}教务处印制}} %第一页左侧页脚空
 \cfoot{}
-\rfoot{{\zihao{5}共~\pageref{LastPage}~页\quad 第~\thepage~页\quad}} %需 lastpage 宏包
+\rfoot{\zihao{5}共~\pageref{LastPage}~页\quad 第~\thepage~页\quad} %需 lastpage 宏包
 \renewcommand{\headrulewidth}{0pt} %页眉无横线
 
 %-----------脚注设置----------------%
@@ -61,8 +61,7 @@
 %------------------定义命令：虚线框环境/诚信保证--------------------% 仅用到tikz包
 \newcommand{\CreGuar}{
 	\begin{center}
-%		\vspace*{-43pt}
-		\begin{tikzpicture}[baseline=0pt]
+		\begin{tikzpicture}
 		\node[inner xsep=0pt,above=3pt,rectangle,text width=0.998\textwidth,align=flush center] (m)
 		{\par
 			\begin{minipage}{15.2cm}
@@ -78,7 +77,6 @@
 %---------------定义命令：编号/标题/年份/学期---------------------%		
 \newcommand{\titleinfo}[2]{
 	\noindent 编号：\underline{\hspace{2cm}}	%编号
-%	\vspace*{-5pt}
 	\begin{center}
 		\zihao{-2}西北工业大学考试试题（卷）
 		\footnote{\zihao{5} 注：命题纸上一般不留答题位置，试题请用小四、宋体打印且不出框。
