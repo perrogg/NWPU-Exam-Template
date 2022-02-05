@@ -1,5 +1,5 @@
 # NWPU-Exam-Template
-![](https://img.shields.io/badge/TeX-template-yellow.svg) ![](https://img.shields.io/badge/license-GNU%20GPL%20v3.0-blue.svg) ![](https://img.shields.io/badge/status-complete-brightgreen.svg) 
+![](https://img.shields.io/badge/TeX-template-yellow.svg) ![](https://img.shields.io/badge/License-CC%20BY%204.0-blue.svg) ![](https://img.shields.io/badge/status-complete-brightgreen.svg) 
 
 ### 模版说明
 
@@ -55,5 +55,11 @@ This is an **unofficial**  LaTeX template of NWPU Exam for Undergraduates.
 
 ### License
 
-GNU General Public License v3.0
+This work is licensed under a
+[Creative Commons Attribution 4.0 International License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 
